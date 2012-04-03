@@ -6,7 +6,15 @@ var	Schema = mongoose.Schema;
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
-var User = require('./models/user');
+//BlogPost Schema
+require('./models/blogpost').configureSchema(Schema, mongoose);
+
+// Define your DB Model variables
+var BlogPost = mongoose.model('BlogPost');
+var Comment = mongoose.model('Comment');
+
+//Alternative way to load model
+var User = require('./models/user'); // User model
 
 
 // Define local strategy for Passport
@@ -42,6 +50,8 @@ module.exports = {
   //include all Models
   // you can access models with db.User or db.ModelName
   User : User,
+  BlogPost : BlogPost,
+  Comment : Comment,
 
   // DB Helper functions
   // initialize DB

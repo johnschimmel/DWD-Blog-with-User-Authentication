@@ -1,0 +1,25 @@
+<h1>Example blog with User Authentication</h1>
+<br><br>
+<% for(i=0; i<posts.length; i++) { %>
+<div class="row">
+
+    <div class="span12">
+
+        <h2>
+            <a href="/entry/<%= posts[i].urlslug %>">
+                <%= posts[i].title %>
+            </a>
+        </h2>
+        <small>
+            <a href="/entryById/<%= posts[i]._id %>">View by objectId ( <%= posts[i]._id %>)</a>
+        </small>
+        <br>
+        
+        <small>By <%= posts[i].author.name.first %> <%= posts[i].author.name.last %> on <%= posts[i].date %></small>
+        <hr />
+        
+    </div>
+</div>
+
+<% } %>
+

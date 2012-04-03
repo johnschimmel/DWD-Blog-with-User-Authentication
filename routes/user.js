@@ -7,16 +7,10 @@ var db = require('../accessDB');
 
 module.exports = {
 
-    // app.get('/'...)
-    index: function(request, response) {
-      
-        templateData = {}
-        response.render('index.html', templateData);
-    },
 
     // app.get('/register'...)
     getRegister: function(request, response) {
-        response.render('register.html');
+        response.render('user/register.html');
     },
 
     // app.post('/register'...)
@@ -61,7 +55,7 @@ module.exports = {
              message: request.flash('error')[0] // get error message is received from prior login attempt
         }
         
-        response.render('login.html', templateData);
+        response.render('user/login.html', templateData);
     },
 
     // app.get('/account', ensureAuthenticated, ...
@@ -72,7 +66,7 @@ module.exports = {
 
         }
     
-        response.render('account.html', templateData );
+        response.render('user/account.html', templateData );
     },
 
     getUsers : function(request, response) {

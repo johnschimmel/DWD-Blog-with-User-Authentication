@@ -1,0 +1,59 @@
+<% if (updated) { %>
+    <br>
+    <div class="alert alert-success">
+        Blog post updated successfully - <a href="/entryById/<%= blogpost._id %>">View post</a>
+    </div>
+<% } %>
+
+
+<form class="form-horizontal" method="POST" action="/update">
+    
+    <!-- include the blog post _id as a hidden value -->
+    <input type="hidden" name="blog_post_id" value="<%= blogpost._id %>">
+    
+    <fieldset>
+        <legend>Blog Post Entry Form</legend>
+        <div class="control-group">
+            <label class="control-label" for="title">Title</label>
+            <div class="controls">
+                <input type="text" name="title" id="title" value="<%= blogpost.title %>">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="urlslug">URL Slug</label>
+            <div class="controls">
+                <input type="text" disabled class="input-medium" name="urlslug" id="urlslug" value="<%= blogpost.urlslug %>">
+                <p class="help-block">The url slug for this blog entry, the ending of the URL. ie 'http://localhost:5000/entry/<b><u>the-itp-story</u></b>'</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="content">Entry content</label>
+            <div class="controls">
+                <textarea class="input-xlarge" id="content" name="content" rows="6" cols="50"><%= blogpost.content %></textarea>
+            </div>
+        </div>
+        
+        <hr />
+        
+        <div class="control-group">
+            <label class="control-label" for="title">Author name</label>
+            <div class="controls">
+                <input type="text" name="name" id="name"  value="<%= blogpost.author.name %>">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="title">Author email</label>
+            <div class="controls">
+                <input type="text" name="email" id="email"  value="<%= blogpost.author.email %>">
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update entry</button>
+            <button class="btn">Cancel</button>
+        </div>
+    </fieldset>
+</form>
