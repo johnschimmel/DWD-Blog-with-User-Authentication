@@ -1,5 +1,15 @@
 Blog example with Passport user authentication
 
+Building off of DWD basic user authentication example - https://github.com/johnschimmel/DWD-User-Authentication
+
+Once running you can create a new entry at /new-entry. This will prompt you to login.
+
+## Todo
+
+Blog posts can be updated by any user right now, this needs to be fixed so only the owner of the entry can update the content.
+
+# Getting started
+
 Inside directory, 
 
     git init
