@@ -3,11 +3,12 @@
   */
 var db = require('../accessDB');
 
+// db.BlogPost
 
 module.exports = {
 
-    index : function(request, response) {
-        
+    mainpage : function(request, response) {
+
         // build the query
         var query = db.BlogPost.find({});
         query.populate('author');
@@ -15,7 +16,7 @@ module.exports = {
 
         // run the query and display blog_main.html template if successful
         query.exec({}, function(err, allPosts){
-
+            
             // prepare template data
             templateData = {
                 posts : allPosts
@@ -23,6 +24,31 @@ module.exports = {
 
             // render the card_form template with the data above
             response.render('blog/blog_main.html', templateData);
+
+        });
+
+    },
+    
+    recent : function(request, response){
+
+        // create date variable for 7 days ago
+        var lastWeek = new Date();
+        lastWeek.setDate(-7);
+
+        // query for all blog posts where the date is greater than or equal to 7 days ago
+        var query = db.BlogPost.find({ date : { $gte: lastWeek }});
+        query.populate('author');
+        query.sort('date',-1);
+        query.exec(function (err, recentPosts) {
+
+
+          // prepare template data
+          templateData = {
+              posts : recentPosts
+          };
+
+          // render the card_form template with the data above
+          response.render('blog/recent_posts.html', templateData);
 
         });
 
@@ -167,31 +193,7 @@ module.exports = {
         response.redirect('/entry/' + blogPostData.urlslug); // for example /entry/this-is-a-post
 
     },
-    
-    getRecent : function(request, response){
-
-        // create date variable for 7 days ago
-        var lastWeek = new Date();
-        lastWeek.setDate(-7);
-
-        // query for all blog posts where the date is greater than or equal to 7 days ago
-        var query = db.BlogPost.find({ date : { $gte: lastWeek }});
-        query.populate("author");
-        query.sort('date',-1);
-        query.exec(function (err, recentPosts) {
-
-
-          // prepare template data
-          templateData = {
-              posts : recentPosts
-          };
-
-          // render the card_form template with the data above
-          response.render('blog/recent_posts.html', templateData);
-
-        });
-
-    },
+  
     
     getEntryUpdate :function(request, response){
         // get the request blog post id

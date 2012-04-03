@@ -10,6 +10,7 @@ module.exports = {
 
     // app.get('/register'...)
     getRegister: function(request, response) {
+        
         response.render('user/register.html');
     },
 

@@ -18,11 +18,12 @@ function ensureAuthenticated(request, response, next) {
 module.exports = function(app) {
 
     /*********** BLOG ROUTES ************/
-    //main page
-    app.get('/', blogRoute.index);
+    // main page - display all blog posts
+    // More Mongoose query information here - http://mongoosejs.com/docs/finding-documents.html
+    app.get('/', blogRoute.mainpage );
     
-    //get recent posts
-    app.get("/recent", blogRoute.getRecent);
+    //get most recent
+    app.get("/recent", blogRoute.recent);
     
     // Display a single blog post
     app.get('/entry/:urlslug', blogRoute.getSingleEntry);
