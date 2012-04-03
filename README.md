@@ -1,6 +1,7 @@
 Blog example with Passport user authentication
 
-Building off of DWD basic user authentication example - https://github.com/johnschimmel/DWD-User-Authentication
+Building off of DWD basic user authentication example -
+https://github.com/johnschimmel/DWD-User-Authentication
 
 Once running you can create a new entry at /new-entry. This will prompt you to login.
 
@@ -13,8 +14,6 @@ Blog posts can be updated by any user right now, this needs to be fixed so only 
 Inside directory, 
 
     git init
-
-
 
 If you haven't already, create a new app on Heroku (cedar), this will add an additional remote GIT path to Heroku. (Assumes you have [Heroku Toolbelt](https://toolbelt.heroku.com/) installed)
 

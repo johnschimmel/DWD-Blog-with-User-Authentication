@@ -233,11 +233,10 @@ module.exports = {
         // update post body should have form element called blog_post_id
         var postid = request.body.blog_post_id;
 
-        // get the blog post
+        // get the blog post with populated author information
         db.BlogPost.findOne({ _id : postid }).populate('author').run(function(err, blogpost){
-            
-            /*** NOT WORKING AT THE MOMENT - RESTRICT UPDATE TO OWNER
-            if (blogpost.author._id !== request.user._id) {
+
+            if (blogpost.author._id.toString() != request.user._id.toString()) {
                 
                 noAccessStr = "Sorry you are not allowed to edit this document<br> \
                 " + blogpost.author._id + " == " + request.user._id;
@@ -248,7 +247,7 @@ module.exports = {
                 console.log("User is allowed to edit this document");
                 console.log(blogpost.author._id + " == " + request.user._id);
             }
-            ***/
+
             
             // we are looking for the BlogPost document where _id == postid
             var condition = { _id : postid };
