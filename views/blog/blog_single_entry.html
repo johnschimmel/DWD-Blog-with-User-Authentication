@@ -2,17 +2,19 @@
 
     <div class="span12">
 
-        <h2><%= title %></h2>
+        <h2><%= blogpost.title %></h2>
         <small>
-            By <a href="mailto:<%= author.email %>"><%= author.name.first %> <%= author.name.last %></a>
+            By <a href="mailto:<%= blogpost.author.email %>"><%= blogpost.author.name.first %> <%= blogpost.author.name.last %></a>
             &nbsp;
-            <a href="/update/<%= _id %>">edit</a>
+            <% if (user_is_owner) { %>
+            <a href="/update/<%= blogpost._id %>">edit</a>
+            <% } %>
         </small>
     
         <br /><br />
     
         <p>
-            <%= content %>
+            <%= blogpost.content %>
         </p>
         <hr />
     </div>
@@ -22,19 +24,19 @@
 <div class="row">
     <div class="span6" id="commentsContainer">
         
-        <% if (comments.length == 0) { %>
+        <% if (blogpost.comments.length == 0) { %>
             <b>No comments</b>
         <% } else { %>
             <h3>Comments</h3>
 
         <% } %>
-        <% for(i=0; i<comments.length; i++) { %>
+        <% for(i=0; i<blogpost.comments.length; i++) { %>
         <div class="comment">
             <p>
-                <b><%= comments[i].name %> said</b><br>
-                <%= comments[i].text %>
+                <b><%= blogpost.comments[i].name %> said</b><br>
+                <%= blogpost.comments[i].text %>
                 <br>
-                <small><%= comments[i].date %></small>
+                <small><%= blogpost.comments[i].date %></small>
             </p>
         </div>
         <% } %>
@@ -61,7 +63,7 @@
                 </div>
 
                 <div class="form-actions">
-                    <input type="hidden" value="<%= urlslug %>" name="urlslug">
+                    <input type="hidden" value="<%= blogpost.urlslug %>" name="urlslug">
                     <button type="submit" class="btn btn-primary">Comment</button>
                     <button type="button" id="ajaxCommentBtn">Comment by AJAX</button>
                 </div>

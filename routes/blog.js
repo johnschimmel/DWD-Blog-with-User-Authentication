@@ -69,11 +69,23 @@ module.exports = {
 
             } else {
 
-                // use different layout for single entry view
-                blogpost.layout = 'layout_single_entry.html';
-
-                // found the blogpost
-                response.render('blog/blog_single_entry.html', blogpost);
+                //determine if current user is the owner of the entry
+                if (typeof request.user != "undefined" && (request.user._id.toString() == blogpost.author._id.toString()) ) {
+                    isOwner = true;
+                } else {
+                    isOwner = false;
+                }
+                
+                templateData = {
+                    user_is_owner : isOwner,
+                    blogpost : blogpost,
+                    layout : 'layout_single_entry.html'// use single entry layout
+                    
+                }
+                console.log(templateData);
+                
+                response.render('blog/blog_single_entry.html', templateData);
+                
             }
         });
     },
@@ -82,7 +94,7 @@ module.exports = {
 
         var requestedPostID = request.params.postId;
 
-        db.BlogPost.findById( requestedPostID, function(err, blogpost) {
+        db.BlogPost.findById( requestedPostID).populate("author").run(function(err, blogpost) {
 
             if (err) {
                 console.log(err);
@@ -94,12 +106,22 @@ module.exports = {
                 response.send("uh oh, can't find that post");
 
             } else {
-
-                // use different layout for single entry view
-                blogpost.layout = 'layout_single_entry.html';
-
-                // found the blogpost
-                response.render('blog/blog_single_entry.html', blogpost);
+                //determine if current user is the owner of the entry
+                if (typeof request.user != "undefined" && (request.user._id.toString() == blogpost.author._id.toString()) ) {
+                    isOwner = true;
+                } else {
+                    isOwner = false;
+                }
+                
+                templateData = {
+                    user_is_owner : isOwner,
+                    blogpost : blogpost,
+                    layout : 'layout_single_entry.html'// use single entry layout
+                    
+                }
+                console.log(templateData);
+                
+                response.render('blog/blog_single_entry.html', templateData);
             }
 
         })
