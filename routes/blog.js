@@ -29,7 +29,6 @@ module.exports = {
     },
     
     getSingleEntry : function(request, response){
-
         // Get the request blog post by urlslug
         db.BlogPost.findOne({ urlslug : request.params.urlslug }).populate('author').run(function(err, blogpost){
 
@@ -137,7 +136,11 @@ module.exports = {
     //display new entry form /new-entry
     getNewEntry : function(request, response){
         //display the blog post entry form
-        response.render('blog/blog_post_entry_form.html');
+        templateData = {
+            currentUser : request.user
+        }
+        
+        response.render('blog/blog_post_entry_form.html', templateData);
     },
     
     // receive form POST for new entry /new-entry
@@ -173,7 +176,7 @@ module.exports = {
 
         // query for all blog posts where the date is greater than or equal to 7 days ago
         var query = db.BlogPost.find({ date : { $gte: lastWeek }});
-
+        query.populate("author");
         query.sort('date',-1);
         query.exec(function (err, recentPosts) {
 
@@ -191,7 +194,6 @@ module.exports = {
     },
     
     getEntryUpdate :function(request, response){
-
         // get the request blog post id
         var requestedPostID = request.params.postId;
 
@@ -225,48 +227,65 @@ module.exports = {
     },
     
     postEntryUpdate : function(request, response){
-
+        
         // update post body should have form element called blog_post_id
         var postid = request.body.blog_post_id;
 
-        // we are looking for the BlogPost document where _id == postid
-        var condition = { _id : postid };
-
-        // update these fields with new values
-        var updatedData = {
-            title : request.body.title,
-            content : request.body.content,
-            author : {
-                name : request.body.name,
-                email : request.body.email
-            }
-        };
-
-        // we only want to update a single document
-        var options = { multi : false };
-
-        // Perform the document update
-        // find the document with 'condition'
-        // include data to update with 'updatedData'
-        // extra options - this time we only want a single doc to update
-        // after updating run the callback function - return err and numAffected
-
-        db.BlogPost.update( condition, updatedData, options, function(err, numAffected){
-
-            if (err) {
-                console.log('Update Error Occurred');
-                response.send('Update Error Occurred ' + err);
-
+        // get the blog post
+        db.BlogPost.findOne({ _id : postid }).populate('author').run(function(err, blogpost){
+            
+            /*** NOT WORKING AT THE MOMENT - RESTRICT UPDATE TO OWNER
+            if (blogpost.author._id !== request.user._id) {
+                
+                noAccessStr = "Sorry you are not allowed to edit this document<br> \
+                " + blogpost.author._id + " == " + request.user._id;
+                
+                response.send(noAccessStr);
+                
             } else {
-
-                console.log("update succeeded");
-                console.log(numAffected + " document(s) updated");
-
-                //redirect the user to the update page - append ?update=true to URL
-                response.redirect('/update/' + postid + "?update=true");
-
+                console.log("User is allowed to edit this document");
+                console.log(blogpost.author._id + " == " + request.user._id);
             }
-        });
+            ***/
+            
+            // we are looking for the BlogPost document where _id == postid
+            var condition = { _id : postid };
+
+            // update these fields with new values
+            var updatedData = {
+                title : request.body.title,
+                content : request.body.content
+            };
+
+            // we only want to update a single document
+            var options = { multi : false };
+
+            // Perform the document update
+            // find the document with 'condition'
+            // include data to update with 'updatedData'
+            // extra options - this time we only want a single doc to update
+            // after updating run the callback function - return err and numAffected
+
+            db.BlogPost.update( condition, updatedData, options, function(err, numAffected){
+
+                if (err) {
+                    console.log('Update Error Occurred');
+                    response.send('Update Error Occurred ' + err);
+
+                } else {
+
+                    console.log("update succeeded");
+                    console.log(numAffected + " document(s) updated");
+
+                    //redirect the user to the update page - append ?update=true to URL
+                    response.redirect('/update/' + postid + "?update=true");
+
+                }
+            });
+            
+        })
+        
+
 
     },
     

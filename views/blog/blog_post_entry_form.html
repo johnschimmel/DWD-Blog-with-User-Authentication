@@ -28,14 +28,7 @@
         <div class="control-group">
             <label class="control-label" for="title">Author name</label>
             <div class="controls">
-                <input type="text" name="name" id="name">
-            </div>
-        </div>
-        
-        <div class="control-group">
-            <label class="control-label" for="title">Author email</label>
-            <div class="controls">
-                <input type="text" name="email" id="email">
+                <input type="text" disabled=disabled name="name" id="name" value="<%= currentUser.name.first %> <%= currentUser.name.last %>">
             </div>
         </div>
         

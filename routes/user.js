@@ -37,6 +37,7 @@ module.exports = {
                 
                 // set Flash message and redirect back to /account
                 request.flash("message", "Password was updated");
+                
                 response.redirect('/account');
                 
             })
@@ -52,7 +53,8 @@ module.exports = {
     login: function(request, response) {
         
         templateData = {
-             message: request.flash('error')[0] // get error message is received from prior login attempt
+             message: request.flash('error')[0], // get error message is received from prior login attempt
+             redirect : request.flash("redirect")
         }
         
         response.render('user/login.html', templateData);

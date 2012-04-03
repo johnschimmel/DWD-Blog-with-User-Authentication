@@ -8,9 +8,11 @@ var blogRoute = require('./routes/blog');
 var userRoute = require('./routes/user');
 
 // If user is authenticated, redirect to 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login');
+function ensureAuthenticated(request, response, next) {
+  if (request.isAuthenticated()) { return next(); }
+
+  request.flash("redirect",request.originalUrl);
+  response.redirect('/login');
 }
 
 module.exports = function(app) {
@@ -33,15 +35,15 @@ module.exports = function(app) {
     app.post('/comment', blogRoute.postComment );
     
     // CREATE A NEW BLOG POST
-    app.get('/new-entry', blogRoute.getNewEntry);
+    app.get('/new-entry', ensureAuthenticated, blogRoute.getNewEntry);
     
     // receive a form submission
-    app.post('/new-entry', blogRoute.postNewEntry);
+    app.post('/new-entry', ensureAuthenticated, blogRoute.postNewEntry);
     
     // get entry update form
-    app.get("/update/:postId", blogRoute.getEntryUpdate);
+    app.get("/update/:postId", ensureAuthenticated, blogRoute.getEntryUpdate);
     
-    app.post("/update", blogRoute.postEntryUpdate);
+    app.post("/update", ensureAuthenticated, blogRoute.postEntryUpdate);
     
     /*********** API & JSON ROUTES ************/
     
@@ -79,8 +81,13 @@ module.exports = function(app) {
     // Passport.authenticate with local email and password, if fails redirect back to GET /login
     // If successful, redirect to /account
     app.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-    function(req, res) {
-      res.redirect('/account');
+    function(request, response) {
+        if (request.param('redirect') != "") {
+            //redirect to page that initiated Login request
+            response.redirect( request.param('redirect') );
+        } else {
+            response.redirect('/account');
+        }
     });
     
     // Display account page
